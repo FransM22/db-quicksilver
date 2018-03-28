@@ -108,5 +108,38 @@ void SimpleGraph::readFromContiguousFile(const std::string &fileName) {
     }
 
     graphFile.close();
+}
 
+std::vector<std::string> SimpleGraph::inOrderNodesClean(RPQTree *t) {
+  auto v = std::vector<std::string>();
+
+  if (t == nullptr) {
+    return v;
+  }
+
+  auto left_v = SimpleGraph::inOrderNodesClean(t->left);
+  v.insert(v.end(), left_v.begin(), left_v.end());
+
+  if (t->data != "/") {
+    v.emplace_back(t->data);
+  }
+
+  auto right_v = SimpleGraph::inOrderNodesClean(t->right);
+  v.insert(v.end(), right_v.begin(), right_v.end());
+
+  return v;
+}
+
+bool SimpleGraph::isEquivalent(RPQTree *a, RPQTree *b) {
+  auto a_clean = inOrderNodesClean(a);
+  auto b_clean = inOrderNodesClean(b);
+
+  if (a_clean.size() != b_clean.size()) {
+    return false;
+  }
+  for (auto i = 0; i < a_clean.size(); i++) {
+    if (a_clean[i] != b_clean[i]) {
+      return false;
+    }
+  }
 }

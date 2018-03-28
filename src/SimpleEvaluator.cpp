@@ -148,7 +148,7 @@ cardStat SimpleEvaluator::evaluate(RPQTree *query) {
 }
 
 RPQTree* SimpleEvaluator::getPrioritizedAST(RPQTree *query) {
-  auto queryParts = RPQTree::inOrderNodesClean(query);
+  auto queryParts = SimpleGraph::inOrderNodesClean(query);
   auto queryString = getPrioritizedAST_aux(queryParts)[0];
   return RPQTree::strToTree(queryString);
 }

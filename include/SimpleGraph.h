@@ -11,6 +11,7 @@
 #include <iostream>
 #include <regex>
 #include <fstream>
+#include "RPQTree.h"
 #include "Graph.h"
 
 class SimpleGraph : public Graph {
@@ -38,6 +39,8 @@ public:
     void setNoVertices(uint32_t n);
     void setNoLabels(uint32_t noLabels);
 
+    static std::vector<std::string> inOrderNodesClean(RPQTree *t);
+    static bool isEquivalent(RPQTree *a, RPQTree *b);
 };
 
 #endif //QS_SIMPLEGRAPH_H

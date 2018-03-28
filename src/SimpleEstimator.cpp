@@ -32,7 +32,7 @@ cardStat SimpleEstimator::estimate(RPQTree *q) {
     std::regex labelPat (R"((\d+))");
 
     uint32_t estimation = 0;
-    auto nodes = RPQTree::inOrderNodesClean(q);
+    auto nodes = SimpleGraph::inOrderNodesClean(q);
 
     std::smatch matches;
     for (auto n : nodes) {

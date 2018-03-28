@@ -27,12 +27,6 @@ public:
     bool isLeaf();
     bool isUnary();
     bool isBinary();
-
-    // List of nodes in in-order traversal order without "/" nodes
-    static std::vector<std::string> inOrderNodesClean(RPQTree *t);
-
-    // Test whether the query will evaluate the same nodes in the same order
-    bool isEquivalent(RPQTree *other);
 };
 
 
