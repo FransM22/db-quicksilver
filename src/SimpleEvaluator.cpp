@@ -143,7 +143,7 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
 cardStat SimpleEvaluator::evaluate(RPQTree *query) {
     auto a = getPrioritizedAST(query);
 
-    auto res = evaluate_aux(query);
+    auto res = evaluate_aux(a);
     return SimpleEvaluator::computeStats(res);
 }
 
