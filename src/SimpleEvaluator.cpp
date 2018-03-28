@@ -193,6 +193,7 @@ std::vector<std::string> SimpleEvaluator::getPrioritizedAST_aux(std::vector<std:
     std::string query = queryParts[i-1] + "/" + queryParts[i];
     auto queryTree = RPQTree::strToTree(query);
     cardinalities[i-1] = est->estimate(queryTree).noPaths;
+    delete queryTree;
   }
 
   int min_cardinality = 9999999;
