@@ -16,17 +16,17 @@
 
 class SimpleGraph : public Graph {
 public:
-    std::vector<std::vector<std::pair<uint32_t,uint32_t>>> adj;
-    std::vector<std::vector<std::pair<uint32_t,uint32_t>>> reverse_adj; // vertex adjacency list
+    std::vector<std::vector<std::pair<uint16_t,uint16_t>>> adj;
+    std::vector<std::vector<std::pair<uint16_t,uint16_t>>> reverse_adj; // vertex adjacency list
 protected:
-    uint32_t V;
-    uint32_t L;
+    uint16_t V;
+    uint16_t L;
 
 public:
 
     SimpleGraph() : V(0), L(0) {};
     ~SimpleGraph() = default;
-    explicit SimpleGraph(uint32_t n);
+    explicit SimpleGraph(uint16_t n);
 
     uint32_t getNoVertices() const override ;
     uint32_t getNoEdges() const override ;

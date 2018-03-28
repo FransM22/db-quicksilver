@@ -4,7 +4,7 @@
 
 #include "SimpleGraph.h"
 
-SimpleGraph::SimpleGraph(uint32_t n)   {
+SimpleGraph::SimpleGraph(uint16_t n)   {
     setNoVertices(n);
 }
 
