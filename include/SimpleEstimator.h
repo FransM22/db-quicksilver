@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <regex>
+#include <cmath>
 #include "Estimator.h"
 #include "SimpleGraph.h"
 

@@ -31,15 +31,15 @@ cardStat SimpleEstimator::estimate(RPQTree *q) {
     // how it works for multiple labels in a query.
     std::regex labelPat (R"((\d+))");
 
-    uint32_t estimation = 0;
+    double estimation = 1;
     auto nodes = SimpleGraph::inOrderNodesClean(q);
 
     std::smatch matches;
     for (auto n : nodes) {
       if (std::regex_search(n, matches, labelPat)) {
         auto label = std::stoul(matches[1]);
-        estimation += labelOccurences[label];
+        estimation *= labelOccurences[label];
       }
     }
-    return cardStat {0, estimation, 0};
+    return cardStat {0, (uint32_t) log(estimation), 0};
 }
