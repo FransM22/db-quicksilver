@@ -17,6 +17,7 @@ class SimpleEvaluator : public Evaluator {
 
     std::shared_ptr<SimpleGraph> graph;
     std::shared_ptr<SimpleEstimator> est;
+    std::map<std::vector<std::string>, std::shared_ptr<SimpleGraph>> concatHist;
 
 public:
 

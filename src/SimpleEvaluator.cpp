@@ -99,6 +99,10 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::join(std::shared_ptr<SimpleGraph> 
 }
 
 std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
+    auto nodes = SimpleGraph::inOrderNodesClean(q);
+    if (concatHist[nodes] != nullptr) {
+      return concatHist[nodes];
+    }
 
     // evaluate according to the AST bottom-up
 
@@ -133,8 +137,8 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
         auto rightGraph = SimpleEvaluator::evaluate_aux(q->right);
 
         // join left with right
-        return SimpleEvaluator::join(leftGraph, rightGraph);
-
+        concatHist[nodes] = SimpleEvaluator::join(leftGraph, rightGraph);
+        return concatHist[nodes];
     }
 
     return nullptr;
