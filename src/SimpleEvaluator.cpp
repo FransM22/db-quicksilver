@@ -42,10 +42,19 @@ void SimpleEvaluator::prepare() {
             auto query_c = std::to_string(label_a) + "-/" + std::to_string(label_b) + "+";
             auto query_d = std::to_string(label_a) + "-/" + std::to_string(label_b) + "-";
 
-            evaluate_aux(RPQTree::strToTree(query_a));
-            evaluate_aux(RPQTree::strToTree(query_b));
-            evaluate_aux(RPQTree::strToTree(query_c));
-            evaluate_aux(RPQTree::strToTree(query_d));
+            auto tree_a = RPQTree::strToTree(query_a);
+            auto tree_b = RPQTree::strToTree(query_b);
+            auto tree_c = RPQTree::strToTree(query_c);
+            auto tree_d = RPQTree::strToTree(query_d);
+            evaluate_aux(tree_a);
+            evaluate_aux(tree_b);
+            evaluate_aux(tree_c);
+            evaluate_aux(tree_d);
+
+            delete(tree_a);
+            delete(tree_b);
+            delete(tree_c);
+            delete(tree_d);
         }
     }
 }
@@ -172,6 +181,7 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
 cardStat SimpleEvaluator::evaluate(RPQTree *query) {
     auto pq = getPrioritizedAST(query);
     auto res = evaluate_aux(pq);
+    delete pq;
     return SimpleEvaluator::computeStats(res);
 }
 
