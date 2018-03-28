@@ -37,24 +37,67 @@ void SimpleEvaluator::prepare() {
 
     for (auto label_a : most_common_labels) {
         for (auto label_b : most_common_labels) {
-            auto query_a = std::to_string(label_a) + "+/" + std::to_string(label_b) + "+";
-            auto query_b = std::to_string(label_a) + "+/" + std::to_string(label_b) + "-";
-            auto query_c = std::to_string(label_a) + "-/" + std::to_string(label_b) + "+";
-            auto query_d = std::to_string(label_a) + "-/" + std::to_string(label_b) + "-";
+            for (auto label_c : most_common_labels) {
+                std::string query;
+                RPQTree* tree;
+                
+                query = std::to_string(label_a);
+                query += "+/";
+                query += std::to_string(label_b);
+                query += "+/";
+                query += std::to_string(label_c);
+                query += "+";
+                tree = RPQTree::strToTree(query);
+                evaluate_aux(tree);
+                
+                query = std::to_string(label_a);
+                query += "+/";
+                query += std::to_string(label_b);
+                query += "+/";
+                query += std::to_string(label_c);
+                query += "-";
+                tree = RPQTree::strToTree(query);
+                evaluate_aux(tree);
+                
+                query = std::to_string(label_a);
+                query += "+/";
+                query += std::to_string(label_b);
+                query += "-/";
+                query += std::to_string(label_c);
+                query += "+";
+                tree = RPQTree::strToTree(query);
+                evaluate_aux(tree);
+                
+                query = std::to_string(label_a);
+                query += "+/";
+                query += std::to_string(label_b);
+                query += "-/";
+                query += std::to_string(label_c);
+                query += "-";
+                tree = RPQTree::strToTree(query);
+                evaluate_aux(tree);
+                
 
-            auto tree_a = RPQTree::strToTree(query_a);
-            auto tree_b = RPQTree::strToTree(query_b);
-            auto tree_c = RPQTree::strToTree(query_c);
-            auto tree_d = RPQTree::strToTree(query_d);
-            evaluate_aux(tree_a);
-            evaluate_aux(tree_b);
-            evaluate_aux(tree_c);
-            evaluate_aux(tree_d);
-
-            delete(tree_a);
-            delete(tree_b);
-            delete(tree_c);
-            delete(tree_d);
+                query = std::to_string(label_a);
+                query += "-/";
+                query += std::to_string(label_b);
+                query += "-/";
+                query += std::to_string(label_c);
+                query += "+";
+                tree = RPQTree::strToTree(query);
+                evaluate_aux(tree);
+                
+                query = std::to_string(label_a);
+                query += "-/";
+                query += std::to_string(label_b);
+                query += "-/";
+                query += std::to_string(label_c);
+                query += "-";
+                tree = RPQTree::strToTree(query);
+                evaluate_aux(tree);
+                
+                delete(tree);
+            }
         }
     }
 }
