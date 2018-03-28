@@ -30,6 +30,24 @@ void SimpleEvaluator::prepare() {
             evaluate_aux(RPQTree::strToTree(query));
         }
     }
+    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
+      for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
+        auto query = std::to_string(label_a) + "+/" + std::to_string(label_b) + "-";
+        evaluate_aux(RPQTree::strToTree(query));
+      }
+    }
+    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
+      for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
+        auto query = std::to_string(label_a) + "-/" + std::to_string(label_b) + "+";
+        evaluate_aux(RPQTree::strToTree(query));
+      }
+    }
+    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
+      for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
+        auto query = std::to_string(label_a) + "-/" + std::to_string(label_b) + "-";
+        evaluate_aux(RPQTree::strToTree(query));
+      }
+    }
 }
 
 cardStat SimpleEvaluator::computeStats(std::shared_ptr<SimpleGraph> &g) {
