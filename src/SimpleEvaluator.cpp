@@ -142,24 +142,10 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
 
     if(q->isLeaf()) {
         // project out the label in the AST
-        std::regex directLabel (R"((\d+)\+)");
-        std::regex inverseLabel (R"((\d+)\-)");
-
-        std::smatch matches;
-
-        uint32_t label;
-        bool inverse;
-
-        if(std::regex_search(q->data, matches, directLabel)) {
-            label = (uint32_t) std::stoul(matches[1]);
-            inverse = false;
-        } else if(std::regex_search(q->data, matches, inverseLabel)) {
-            label = (uint32_t) std::stoul(matches[1]);
-            inverse = true;
-        } else {
-            std::cerr << "Label parsing failed!" << std::endl;
-            return nullptr;
-        }
+        bool inverse = q->data.back() != '+';
+        auto data = q->data;
+        auto data_num = data.substr(0, data.size() - 1);
+        uint32_t label = std::stoul(data_num);
 
         return SimpleEvaluator::project(label, inverse, graph);
     }
