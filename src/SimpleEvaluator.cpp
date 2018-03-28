@@ -23,6 +23,13 @@ void SimpleEvaluator::prepare() {
 
     // prepare other things here.., if necessary
 
+    // Perform some queries to fill the cache
+    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
+        for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
+            auto query = std::to_string(label_a) + "+/" + std::to_string(label_b) + "+";
+            evaluate_aux(RPQTree::strToTree(query));
+        }
+    }
 }
 
 cardStat SimpleEvaluator::computeStats(std::shared_ptr<SimpleGraph> &g) {
