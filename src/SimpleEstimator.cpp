@@ -14,7 +14,13 @@ SimpleEstimator::SimpleEstimator(std::shared_ptr<SimpleGraph> &g){
 void SimpleEstimator::prepare() {
 
     // do your prep here
-
+    this->labelOccurences.resize(graph->getNoLabels());
+    for (auto start_node : graph->adj) {
+      for (auto edge : start_node) {
+        auto label = edge.first;
+        labelOccurences[label]++;
+      }
+    }
 }
 
 cardStat SimpleEstimator::estimate(RPQTree *q) {

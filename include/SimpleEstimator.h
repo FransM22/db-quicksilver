@@ -5,12 +5,14 @@
 #ifndef QS_SIMPLEESTIMATOR_H
 #define QS_SIMPLEESTIMATOR_H
 
+#include <vector>
 #include "Estimator.h"
 #include "SimpleGraph.h"
 
 class SimpleEstimator : public Estimator {
 
     std::shared_ptr<SimpleGraph> graph;
+    std::vector<int> labelOccurences;
 
 public:
     explicit SimpleEstimator(std::shared_ptr<SimpleGraph> &g);
