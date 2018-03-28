@@ -6,6 +6,7 @@
 #define QS_SIMPLEESTIMATOR_H
 
 #include <vector>
+#include <regex>
 #include "Estimator.h"
 #include "SimpleGraph.h"
 
@@ -20,7 +21,6 @@ public:
 
     void prepare() override ;
     cardStat estimate(RPQTree *q) override ;
-
 };
 
 
