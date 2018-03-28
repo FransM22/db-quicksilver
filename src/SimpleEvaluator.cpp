@@ -127,7 +127,8 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
             return nullptr;
         }
 
-        return SimpleEvaluator::project(label, inverse, graph);
+        concatHist[nodes] = SimpleEvaluator::project(label, inverse, graph);
+        return concatHist[nodes];
     }
 
     if(q->isConcat()) {
