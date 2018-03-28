@@ -141,6 +141,41 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
 }
 
 cardStat SimpleEvaluator::evaluate(RPQTree *query) {
+    auto a = getPrioritizedAST(query);
+
     auto res = evaluate_aux(query);
     return SimpleEvaluator::computeStats(res);
+}
+
+RPQTree* SimpleEvaluator::getPrioritizedAST(RPQTree *query) {
+  auto nodes = RPQTree::inOrderNodesClean(query);
+  std::vector<int> cardinalities;
+  cardinalities.resize(nodes.size()-1);
+
+  // debug
+  std::cout << "Getting prioritized AST" << std::endl;
+  // /debug
+  for (auto i = 1; i < nodes.size(); i++) {
+    // debug
+    std::cout << " i=" << i;
+    // /debug
+    std::string query = nodes[i-1] + "/" + nodes[i];
+    auto queryTree = RPQTree::strToTree(query);
+    // debug
+    std::cout << " query: ";
+    queryTree->print();
+    std::cout << std::endl;
+    // /debug
+    cardinalities[i-1] = est->estimate(queryTree).noPaths;
+  }
+
+  std::cout << "Cardinalities of subqueries: (" << cardinalities.size() << ")" << std::endl;
+  for (auto i = 1; i < nodes.size(); i++) {
+    std::cout << "i=" << i << " l1: " << nodes[i-1] << ", l2: " << nodes[i];
+    std::cout << ", card: " << cardinalities[i-1] << std::endl;
+  }
+
+  // TODO replace with actual query
+  std::string tempQuery = "1+/2+";
+  return RPQTree::strToTree(tempQuery);
 }

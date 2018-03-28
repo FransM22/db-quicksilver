@@ -91,37 +91,29 @@ bool RPQTree::isLeaf() {
     return left == nullptr && right == nullptr;
 }
 
-std::vector<std::string> RPQTree::inOrderNodes(RPQTree *t) {
+std::vector<std::string> RPQTree::inOrderNodesClean(RPQTree *t) {
   auto v = std::vector<std::string>();
 
   if (t == nullptr) {
     return v;
   }
 
-  auto left_v = RPQTree::inOrderNodes(t->left);
+  auto left_v = RPQTree::inOrderNodesClean(t->left);
   v.insert(v.end(), left_v.begin(), left_v.end());
 
-  v.emplace_back(t->data);
+  if (t->data != "/") {
+    v.emplace_back(t->data);
+  }
 
-  auto right_v = RPQTree::inOrderNodes(t->right);
+  auto right_v = RPQTree::inOrderNodesClean(t->right);
   v.insert(v.end(), right_v.begin(), right_v.end());
 
   return v;
 }
 
 bool RPQTree::isEquivalent(RPQTree *other) {
-  auto a_clean = std::vector<std::string>();
-  auto b_clean = std::vector<std::string>();
-  for (auto n : inOrderNodes(this)) {
-    if (n != "/") {
-      a_clean.emplace_back(n);
-    }
-  }
-  for (auto n : inOrderNodes(other)) {
-    if (n != "/") {
-      b_clean.emplace_back(n);
-    }
-  }
+  auto a_clean = inOrderNodesClean(this);
+  auto b_clean = inOrderNodesClean(other);
 
   if (a_clean.size() != b_clean.size()) {
     return false;
