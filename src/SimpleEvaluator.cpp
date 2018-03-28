@@ -24,29 +24,29 @@ void SimpleEvaluator::prepare() {
     // prepare other things here.., if necessary
 
     // Perform some queries to fill the cache
-    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
-        for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
-            auto query = std::to_string(label_a) + "+/" + std::to_string(label_b) + "+";
-            evaluate_aux(RPQTree::strToTree(query));
+    std::vector<int> most_common_labels;
+    long long mean_occurences = 0;
+    for (auto occurences : est->labelOccurences) {
+        mean_occurences += occurences / est->labelOccurences.size(); // Only need a rough estimation
+    }
+    for (auto i = 0; i < est->labelOccurences.size(); i++) {
+        if (est->labelOccurences[i] > mean_occurences) {
+            most_common_labels.emplace_back(est->labelOccurences[i]);
         }
     }
-    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
-      for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
-        auto query = std::to_string(label_a) + "+/" + std::to_string(label_b) + "-";
-        evaluate_aux(RPQTree::strToTree(query));
-      }
-    }
-    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
-      for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
-        auto query = std::to_string(label_a) + "-/" + std::to_string(label_b) + "+";
-        evaluate_aux(RPQTree::strToTree(query));
-      }
-    }
-    for (auto label_a = 0; label_a < graph->getNoLabels(); label_a++) {
-      for (auto label_b = 0; label_b < graph->getNoLabels(); label_b++) {
-        auto query = std::to_string(label_a) + "-/" + std::to_string(label_b) + "-";
-        evaluate_aux(RPQTree::strToTree(query));
-      }
+
+    for (auto label_a : most_common_labels) {
+        for (auto label_b : most_common_labels) {
+            auto query_a = std::to_string(label_a) + "+/" + std::to_string(label_b) + "+";
+            auto query_b = std::to_string(label_a) + "+/" + std::to_string(label_b) + "-";
+            auto query_c = std::to_string(label_a) + "-/" + std::to_string(label_b) + "+";
+            auto query_d = std::to_string(label_a) + "-/" + std::to_string(label_b) + "-";
+
+            evaluate_aux(RPQTree::strToTree(query_a));
+            evaluate_aux(RPQTree::strToTree(query_b));
+            evaluate_aux(RPQTree::strToTree(query_c));
+            evaluate_aux(RPQTree::strToTree(query_d));
+        }
     }
 }
 
