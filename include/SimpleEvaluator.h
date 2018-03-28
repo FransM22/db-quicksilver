@@ -35,6 +35,7 @@ public:
     static cardStat computeStats(std::shared_ptr<SimpleGraph> &g);
 
     RPQTree* getPrioritizedAST(RPQTree *query);
+    std::vector<std::string> getPrioritizedAST_aux(std::vector<std::string> queryParts);
 };
 
 

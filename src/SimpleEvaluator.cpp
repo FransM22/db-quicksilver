@@ -148,34 +148,47 @@ cardStat SimpleEvaluator::evaluate(RPQTree *query) {
 }
 
 RPQTree* SimpleEvaluator::getPrioritizedAST(RPQTree *query) {
-  auto nodes = RPQTree::inOrderNodesClean(query);
-  std::vector<int> cardinalities;
-  cardinalities.resize(nodes.size()-1);
+  auto queryParts = RPQTree::inOrderNodesClean(query);
+  auto queryString = getPrioritizedAST_aux(queryParts)[0];
+  return RPQTree::strToTree(queryString);
+}
 
-  // debug
-  std::cout << "Getting prioritized AST" << std::endl;
-  // /debug
-  for (auto i = 1; i < nodes.size(); i++) {
-    // debug
-    std::cout << " i=" << i;
-    // /debug
-    std::string query = nodes[i-1] + "/" + nodes[i];
+std::vector<std::string> SimpleEvaluator::getPrioritizedAST_aux(std::vector<std::string> queryParts) {
+  if (queryParts.size() == 1) {
+    return queryParts;
+  }
+
+  std::vector<int> cardinalities;
+  cardinalities.resize(queryParts.size()-1);
+
+  for (auto i = 1; i < queryParts.size(); i++) {
+    std::string query = queryParts[i-1] + "/" + queryParts[i];
     auto queryTree = RPQTree::strToTree(query);
-    // debug
-    std::cout << " query: ";
-    queryTree->print();
-    std::cout << std::endl;
-    // /debug
     cardinalities[i-1] = est->estimate(queryTree).noPaths;
   }
 
-  std::cout << "Cardinalities of subqueries: (" << cardinalities.size() << ")" << std::endl;
-  for (auto i = 1; i < nodes.size(); i++) {
-    std::cout << "i=" << i << " l1: " << nodes[i-1] << ", l2: " << nodes[i];
-    std::cout << ", card: " << cardinalities[i-1] << std::endl;
+  int min_cardinality = 9999999;
+  int min_cardinality_i;
+
+  for (auto i = 1; i < queryParts.size(); i++) {
+    auto cardinality = cardinalities[i-1];
+    if (cardinality < min_cardinality) {
+      min_cardinality_i = i;
+      min_cardinality = cardinality;
+    }
   }
 
-  // TODO replace with actual query
-  std::string tempQuery = "1+/2+";
-  return RPQTree::strToTree(tempQuery);
+  std::vector<std::string> newQueryParts;
+  newQueryParts.resize(queryParts.size() - 1);
+
+  for (auto i = 0; i < newQueryParts.size(); i++) {
+    if (i < min_cardinality_i) {
+      newQueryParts[i] = queryParts[i];
+    } else if (i == min_cardinality_i) {
+      newQueryParts[i] = "(" + queryParts[i] + "/" + queryParts[i+1] + ")";
+    } else if (i >= min_cardinality_i + 1) {
+      newQueryParts[i] = queryParts[i+1];
+    }
+  }
+  return getPrioritizedAST_aux(newQueryParts);
 }
