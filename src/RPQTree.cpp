@@ -90,3 +90,48 @@ bool RPQTree::isUnary() {
 bool RPQTree::isLeaf() {
     return left == nullptr && right == nullptr;
 }
+
+std::vector<std::string> RPQTree::inOrderNodes(RPQTree *t) {
+  auto v = std::vector<std::string>();
+
+  if (t == nullptr) {
+    return v;
+  }
+
+  auto left_v = RPQTree::inOrderNodes(t->left);
+  v.insert(v.end(), left_v.begin(), left_v.end());
+
+  v.emplace_back(t->data);
+
+  auto right_v = RPQTree::inOrderNodes(t->right);
+  v.insert(v.end(), right_v.begin(), right_v.end());
+
+  return v;
+}
+
+bool RPQTree::isEquivalent(RPQTree *other) {
+  auto a_clean = std::vector<std::string>();
+  auto b_clean = std::vector<std::string>();
+  for (auto n : inOrderNodes(this)) {
+    if (n != "/") {
+      a_clean.emplace_back(n);
+    }
+  }
+  for (auto n : inOrderNodes(other)) {
+    if (n != "/") {
+      b_clean.emplace_back(n);
+    }
+  }
+
+  if (a_clean.size() != b_clean.size()) {
+    return false;
+  }
+  for (auto i = 0; i < a_clean.size(); i++) {
+    if (a_clean[i] != b_clean[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
