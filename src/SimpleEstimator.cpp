@@ -31,7 +31,7 @@ cardStat SimpleEstimator::estimate(RPQTree *q) {
     // how it works for multiple labels in a query.
     std::regex labelPat (R"((\d+)");
 
-    int estimation = 0;
+    uint32_t estimation = 0;
     auto nodes = RPQTree::inOrderNodes(q);
 
     std::smatch matches;
