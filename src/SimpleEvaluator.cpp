@@ -141,9 +141,9 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
 }
 
 cardStat SimpleEvaluator::evaluate(RPQTree *query) {
-    auto a = getPrioritizedAST(query);
+    auto pq = getPrioritizedAST(query);
 
-    auto res = evaluate_aux(a);
+    auto res = evaluate_aux(pq);
     return SimpleEvaluator::computeStats(res);
 }
 
@@ -168,10 +168,10 @@ std::vector<std::string> SimpleEvaluator::getPrioritizedAST_aux(std::vector<std:
   }
 
   int min_cardinality = 9999999;
-  int min_cardinality_i;
+  int min_cardinality_i = 0;
 
-  for (auto i = 1; i < queryParts.size(); i++) {
-    auto cardinality = cardinalities[i-1];
+  for (auto i = 0; i < queryParts.size()-1; i++) {
+    auto cardinality = cardinalities[i];
     if (cardinality < min_cardinality) {
       min_cardinality_i = i;
       min_cardinality = cardinality;
