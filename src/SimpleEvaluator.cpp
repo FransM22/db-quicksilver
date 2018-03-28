@@ -147,11 +147,7 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
         auto data_num = data.substr(0, data.size() - 1);
         uint32_t label = std::stoul(data_num);
 
-        auto key = std::make_pair(label, inverse);
-        if (projectHist[key] == nullptr) {
-            projectHist[key] = SimpleEvaluator::project(label, inverse, graph);
-        }
-        return projectHist[key];
+        return SimpleEvaluator::project(label, inverse, graph);
     }
 
     if(q->isConcat()) {
