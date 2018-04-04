@@ -23,40 +23,6 @@ void SimpleEvaluator::prepare() {
 
     // prepare other things here.., if necessary
 
-    // Perform some queries to fill the cache
-    std::vector<int> most_common_labels;
-    long long mean_occurences = 0;
-    for (auto occurences : est->labelOccurences) {
-        mean_occurences += occurences / est->labelOccurences.size(); // Only need a rough estimation
-    }
-    for (auto i = 0; i < est->labelOccurences.size(); i++) {
-        if (est->labelOccurences[i] > mean_occurences) {
-            most_common_labels.emplace_back(est->labelOccurences[i]);
-        }
-    }
-
-    for (auto label_a : most_common_labels) {
-        for (auto label_b : most_common_labels) {
-            auto query_a = std::to_string(label_a) + "+/" + std::to_string(label_b) + "+";
-            auto query_b = std::to_string(label_a) + "+/" + std::to_string(label_b) + "-";
-            auto query_c = std::to_string(label_a) + "-/" + std::to_string(label_b) + "+";
-            auto query_d = std::to_string(label_a) + "-/" + std::to_string(label_b) + "-";
-
-            auto tree_a = RPQTree::strToTree(query_a);
-            auto tree_b = RPQTree::strToTree(query_b);
-            auto tree_c = RPQTree::strToTree(query_c);
-            auto tree_d = RPQTree::strToTree(query_d);
-            evaluate_aux(tree_a);
-            evaluate_aux(tree_b);
-            evaluate_aux(tree_c);
-            evaluate_aux(tree_d);
-
-            delete(tree_a);
-            delete(tree_b);
-            delete(tree_c);
-            delete(tree_d);
-        }
-    }
 }
 
 cardStat SimpleEvaluator::computeStats(std::shared_ptr<SimpleGraph> &g) {
@@ -134,9 +100,6 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::join(std::shared_ptr<SimpleGraph> 
 
 std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
     auto nodes = SimpleGraph::inOrderNodesClean(q);
-    if (concatHist[nodes] != nullptr) {
-      return concatHist[nodes];
-    }
 
     // evaluate according to the AST bottom-up
 
@@ -157,8 +120,7 @@ std::shared_ptr<SimpleGraph> SimpleEvaluator::evaluate_aux(RPQTree *q) {
         auto rightGraph = SimpleEvaluator::evaluate_aux(q->right);
 
         // join left with right
-        concatHist[nodes] = SimpleEvaluator::join(leftGraph, rightGraph);
-        return concatHist[nodes];
+        return SimpleEvaluator::join(leftGraph, rightGraph);
     }
 
     return nullptr;
